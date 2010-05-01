@@ -1,9 +1,18 @@
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
-require 'mongoid_i18n'
-require 'spec'
-require 'spec/autorun'
 
-Spec::Runner.configure do |config|
-  
+require 'mongoid/i18n'
+require 'rspec'
+require 'rspec/autorun'
+
+Rspec.configure do |config|
+  config.mock_with :mocha
+  config.after :each do
+    Mongoid.master.collections.each(&:drop)
+  end
+end
+
+Mongoid.configure do |config|
+  config.master = Mongo::Connection.new.db('mongoid_i18n_test')
+  config.allow_dynamic_fields = false
 end
