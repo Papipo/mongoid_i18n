@@ -2,13 +2,8 @@ module Mongoid
   module I18n
     class LocalizedCriteria < Mongoid::Criteria
       def where(selector = nil)
-        case selector
-        when String
-          @selector.update("$where" => selector)
-        else
-          @selector.update(selector ? selector.expand_complex_criteria : {})
-          expand_localized_fields_in_selector if @selector.is_a?(Hash)
-        end
+        super
+        expand_localized_fields_in_selector if selector.is_a?(Hash)
         self
       end
       
