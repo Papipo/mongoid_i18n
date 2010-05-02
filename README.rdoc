@@ -1,7 +1,6 @@
 = mongoid_i18n
 
 Mongoid::I18n is a gem that makes localization almost transparent for the developer.
-It is under development, so it lacks some features. Check "Known issues" below.
 
 == Usage
   
@@ -21,17 +20,15 @@ This will allow you to do stuff like this:
   I18n.locale :es
   @entry.title = 'Título' # will be stored in the 'es' translation
   
-  @entry.title_translations # this returns a hash: {:en => 'Title', :es => 'Title'}
-  @entry.title_translations = {:en => 'New title', :es => 'Nuevo título} # You can always mass-assign.
+  @entry.title_translations # this returns a hash: {'en' => 'Title', 'es' => 'Title'}
+  @entry.title_translations = {'en' => 'New title', 'es' => 'Nuevo título} # You can always mass-assign.
   
 Criteria is handled for you:
 
   I18n.locale = :en
   Entry.where(:title => 'Title') # This will search automatically for the 'en' translation
+  Entry.find(:first, :title.in => ['Stuff', 'More stuff']) # find() and complex criteria also works
   
-== Known issues
-  
-* It does not handle translations automatically when using find().
 
 == Note on Patches/Pull Requests
  
