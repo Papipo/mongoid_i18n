@@ -10,10 +10,32 @@ class Entry
 end
 
 describe Mongoid::I18n, "localized_field" do
+  before do
+    I18n.locale = :en
+  end
+  
   describe "with an assigned value" do
     before do
-      I18n.locale = :en
       @entry = Entry.new(:title => 'Title')
+    end
+    
+    describe "and persisted" do
+      before do
+        @entry.save
+      end
+      
+      describe "where() criteria" do
+        it "should use the current locale value" do
+          Entry.where(:title => 'Title').first.should == @entry
+        end
+      end
+      
+      describe "find(:first) with :conditions" do
+        it "should use the current locale value" do
+          pending "where() override should be on Criteria instead of Document"
+          Entry.find(:first, :conditions => {:title => 'Title'}).should == @entry
+        end
+      end
     end
     
     it "should return that value" do
@@ -25,7 +47,7 @@ describe Mongoid::I18n, "localized_field" do
         I18n.locale = :es
       end
       
-      it "should return a blank value value" do
+      it "should return a blank value" do
         @entry.title.should be_blank
       end
       
@@ -53,7 +75,7 @@ describe Mongoid::I18n, "localized_field" do
             @entry.title_translations.should == {:en => 'New title', :es => 'Nuevo título'}
           end
           
-          it "the setter should return the new translation" do
+          it "the getter should return the new translation" do
             @entry.title.should == 'Nuevo título'
           end
         end

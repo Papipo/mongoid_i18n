@@ -10,8 +10,23 @@ module Mongoid
       def localized_field(name, options = {})
         field name, options.merge(:type => LocalizedField, :default => {})
       end
+      
+      def where(selector = nil)
+        if selector && selector.is_a?(Hash)
+          super(expand_localized_fields_in_selector(selector))
+        else
+          super
+        end
+      end
     
       protected
+      def expand_localized_fields_in_selector(selector)
+        fields.select { |k,f| selector.keys.include?(k.to_sym) && f.type == LocalizedField }.each_key do |k|
+          selector["#{k}.#{::I18n.locale}"] = selector.delete(k.to_sym)
+        end
+        selector
+      end
+      
       def create_accessors(name, meth, options = {})
         if options[:type] == LocalizedField
           define_method(meth) { read_attribute(name)[::I18n.locale] }
