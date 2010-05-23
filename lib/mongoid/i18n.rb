@@ -1,8 +1,7 @@
-gem 'mongoid', '2.0.0.beta4'
+gem 'mongoid', '>= 2.0.0.beta6'
 require 'mongoid'
 require 'mongoid/i18n/localized_field'
 require 'mongoid/i18n/localized_criteria'
-require 'mongoid/i18n/patches'
 
 module Mongoid
   module I18n
