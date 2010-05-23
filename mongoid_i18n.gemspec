@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{mongoid_i18n}
-  s.version = "0.1.1"
+  s.version = "0.1.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Rodrigo Álvarez"]
-  s.date = %q{2010-05-03}
+  s.date = %q{2010-05-23}
   s.description = %q{This gem aims to be a transparent way to deal with localizable fields.
       Basically use localized_field() instead of field() and that's it.
       It will take care of locales for you when using find.
@@ -30,7 +30,6 @@ Gem::Specification.new do |s|
      "lib/mongoid/i18n.rb",
      "lib/mongoid/i18n/localized_criteria.rb",
      "lib/mongoid/i18n/localized_field.rb",
-     "lib/mongoid/i18n/patches.rb",
      "mongoid_i18n.gemspec",
      "spec/.rspec",
      "spec/integration/mongoid/i18n_spec.rb",
