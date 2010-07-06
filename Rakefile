@@ -11,13 +11,13 @@ begin
     gem.summary = %Q{Mongoid plugin to deal with localizable fields}
     gem.description = %Q{This gem aims to be a transparent way to deal with localizable fields.
       Basically use localized_field() instead of field() and that's it.
-      It will take care of locales for you when using find.
+      It will take care of locales for you when using find or criteria.
       }
     gem.email = "papipo@gmail.com"
     gem.homepage = "http://github.com/Papipo/mongoid_i18n"
     gem.authors = ["Rodrigo Álvarez"]
-    gem.add_dependency "mongoid", '2.0.0.beta6'
-    gem.add_development_dependency "rspec", "2.0.0.beta.8"
+    gem.add_dependency "mongoid", '>= 2.0.0.beta9'
+    gem.add_development_dependency "rspec", ">= 2.0.0.beta.8"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
   Jeweler::GemcutterTasks.new

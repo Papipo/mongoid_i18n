@@ -1,5 +1,3 @@
-gem 'mongoid', '>= 2.0.0.beta6'
-require 'mongoid'
 require 'mongoid/i18n/localized_field'
 require 'mongoid/i18n/localized_criteria'
 
@@ -9,7 +7,7 @@ module Mongoid
     
     module ClassMethods
       def localized_field(name, options = {})
-        field name, options.merge(:type => LocalizedField, :default => {})
+        field name, options.merge(:type => LocalizedField)
       end
       
       def criteria
@@ -19,7 +17,7 @@ module Mongoid
       protected
       def create_accessors(name, meth, options = {})
         if options[:type] == LocalizedField
-          define_method(meth) { read_attribute(name)[::I18n.locale.to_s] }
+          define_method(meth) { read_attribute(name)[::I18n.locale.to_s] rescue '' }
           define_method("#{meth}=") do |value| 
             write_attribute(name, (@attributes[name] || {}).merge(::I18n.locale.to_s => value))
           end

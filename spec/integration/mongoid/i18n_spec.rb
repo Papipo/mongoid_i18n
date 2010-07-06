@@ -14,6 +14,16 @@ describe Mongoid::I18n, "localized_field" do
     I18n.locale = :en
   end
   
+  describe "without an assigned value" do
+    before do
+      @entry = Entry.new
+    end
+    
+    it "should return blank" do
+      @entry.title.should be_blank
+    end
+  end
+  
   describe "with an assigned value" do
     before do
       @entry = Entry.new(:title => 'Title')
