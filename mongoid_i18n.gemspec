@@ -5,14 +5,14 @@
 
 Gem::Specification.new do |s|
   s.name = %q{mongoid_i18n}
-  s.version = "0.1.3"
+  s.version = "0.1.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["Rodrigo Álvarez"]
-  s.date = %q{2010-05-23}
+  s.authors = ["Rodrigo \303\201lvarez"]
+  s.date = %q{2010-07-06}
   s.description = %q{This gem aims to be a transparent way to deal with localizable fields.
       Basically use localized_field() instead of field() and that's it.
-      It will take care of locales for you when using find.
+      It will take care of locales for you when using find or criteria.
       }
   s.email = %q{papipo@gmail.com}
   s.extra_rdoc_files = [
@@ -40,7 +40,7 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/Papipo/mongoid_i18n}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.6}
+  s.rubygems_version = %q{1.3.7}
   s.summary = %q{Mongoid plugin to deal with localizable fields}
   s.test_files = [
     "spec/integration/mongoid/i18n_spec.rb",
@@ -53,16 +53,16 @@ Gem::Specification.new do |s|
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
     s.specification_version = 3
 
-    if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<mongoid>, ["= 2.0.0.beta6"])
-      s.add_development_dependency(%q<rspec>, ["= 2.0.0.beta.8"])
+    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
+      s.add_runtime_dependency(%q<mongoid>, [">= 2.0.0.beta9"])
+      s.add_development_dependency(%q<rspec>, [">= 2.0.0.beta.8"])
     else
-      s.add_dependency(%q<mongoid>, ["= 2.0.0.beta6"])
-      s.add_dependency(%q<rspec>, ["= 2.0.0.beta.8"])
+      s.add_dependency(%q<mongoid>, [">= 2.0.0.beta9"])
+      s.add_dependency(%q<rspec>, [">= 2.0.0.beta.8"])
     end
   else
-    s.add_dependency(%q<mongoid>, ["= 2.0.0.beta6"])
-    s.add_dependency(%q<rspec>, ["= 2.0.0.beta.8"])
+    s.add_dependency(%q<mongoid>, [">= 2.0.0.beta9"])
+    s.add_dependency(%q<rspec>, [">= 2.0.0.beta.8"])
   end
 end
 
