@@ -20,7 +20,12 @@ module Mongoid
         if options[:type] == LocalizedField
           define_method(meth) { read_attribute(name)[::I18n.locale.to_s] rescue '' }
           define_method("#{meth}=") do |value|
-            write_attribute(name, (@attributes[name] || {}).merge(::I18n.locale.to_s => value))
+            if value.is_a?(Hash)
+              val = (@attributes[name] || {}).merge(value)
+            else
+              val = (@attributes[name] || {}).merge(::I18n.locale.to_s => value)
+            end
+            write_attribute(name, val)
           end
           define_method("#{meth}_translations") { read_attribute(name) }
           define_method("#{meth}_translations=") { |value| write_attribute(name, value) }

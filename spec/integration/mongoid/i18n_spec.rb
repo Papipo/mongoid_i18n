@@ -141,3 +141,48 @@ describe Mongoid::I18n, 'criteria on embeds_many association' do
     @entry.sub_entries.criteria.instance_variable_get("@documents").should == @sub_entries
   end
 end
+
+describe Mongoid::I18n, 'criteria on embeds_one association' do
+  before do
+    class Entry
+      embeds_one :sub_entry
+    end
+
+    class SubEntry
+      include Mongoid::Document
+      include Mongoid::I18n
+      localized_field :subtitle
+      embedded_in :entry, :inverse_of => :sub_entries
+    end
+    @entry = Entry.new
+  end
+  
+  it "should store the title in the right locale" do
+    @entry.create_sub_entry(:subtitle => "Oxford Street")
+    
+    @entry.reload
+    
+    @entry.sub_entry.subtitle.should == 'Oxford Street'
+    
+    I18n.locale = :nl
+    
+    @entry.sub_entry.subtitle = 'Hoofdstraat'
+    @entry.save
+    
+    @entry.reload
+    
+    @entry.sub_entry.subtitle.should == 'Hoofdstraat'
+    
+    I18n.locale = :en
+    
+    @entry.sub_entry.subtitle.should == 'Oxford Street'
+    
+    @entry.sub_entry.subtitle = 'Main Street'
+    @entry.save
+    
+    @entry.reload
+    
+    @entry.sub_entry.subtitle.should == 'Main Street'
+    
+  end
+end
