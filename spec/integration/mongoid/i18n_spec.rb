@@ -163,26 +163,5 @@ describe Mongoid::I18n, 'criteria on embeds_one association' do
     @entry.reload
     
     @entry.sub_entry.subtitle.should == 'Oxford Street'
-    
-    I18n.locale = :nl
-    
-    @entry.sub_entry.subtitle = 'Hoofdstraat'
-    @entry.save
-    
-    @entry.reload
-    
-    @entry.sub_entry.subtitle.should == 'Hoofdstraat'
-    
-    I18n.locale = :en
-    
-    @entry.sub_entry.subtitle.should == 'Oxford Street'
-    
-    @entry.sub_entry.subtitle = 'Main Street'
-    @entry.save
-    
-    @entry.reload
-    
-    @entry.sub_entry.subtitle.should == 'Main Street'
-    
   end
 end
