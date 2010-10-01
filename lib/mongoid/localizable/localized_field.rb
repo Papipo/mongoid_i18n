@@ -1,5 +1,5 @@
 module Mongoid
-  module I18n
+  module Localizable
     class LocalizedField < Hash
     end
   end

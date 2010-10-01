@@ -1,8 +1,8 @@
-require 'mongoid/i18n/localized_field'
-require 'mongoid/i18n/localized_criteria'
+require 'mongoid/localizable/localized_field'
+require 'mongoid/localizable/localized_criteria'
 
 module Mongoid
-  module I18n
+  module Localizable
     extend ActiveSupport::Concern
 
     module ClassMethods
@@ -12,7 +12,7 @@ module Mongoid
 
       def criteria
         scope = scope_stack.last rescue nil
-        scope || I18n::LocalizedCriteria.new(self)
+        scope || Localizable::LocalizedCriteria.new(self)
       end
 
       protected

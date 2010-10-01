@@ -1,12 +1,12 @@
 require 'spec_helper'
 
-describe Mongoid::I18n::LocalizedCriteria do
+describe Mongoid::Localizable::LocalizedCriteria do
   describe "where" do
     before do
       @title = Mongoid::Field.new(:title, :type => Mongoid::I18n::LocalizedField)
       @published = Mongoid::Field.new(:published, :type => Boolean)
       klass = stub(:fields => {'title' => @title, 'published' => @published})
-      @criteria = Mongoid::I18n::LocalizedCriteria.new(klass)
+      @criteria = Mongoid::Localizable::LocalizedCriteria.new(klass)
       @criteria.where(:title.in => ['Title'], :published => true)
     end
     

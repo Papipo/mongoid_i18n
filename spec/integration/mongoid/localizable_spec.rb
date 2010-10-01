@@ -3,13 +3,13 @@ require 'spec_helper'
 
 class Entry
   include Mongoid::Document
-  include Mongoid::I18n
+  include Mongoid::Localizable
 
   localized_field :title
   field :published, :type => Boolean
 end
 
-describe Mongoid::I18n, "localized_field" do
+describe Mongoid::Localizable, "localized_field" do
   before do
     I18n.locale = :en
   end

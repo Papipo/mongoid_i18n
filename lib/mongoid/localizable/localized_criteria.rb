@@ -1,5 +1,5 @@
 module Mongoid
-  module I18n
+  module Localizable
     class LocalizedCriteria < Mongoid::Criteria
       def where(selector = nil)
         super
