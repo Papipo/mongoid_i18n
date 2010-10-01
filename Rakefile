@@ -7,7 +7,7 @@ require 'rspec/core/rake_task'
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
-    gem.name = "mongoid_i18n"
+    gem.name = "mongoid_localizable"
     gem.summary = %Q{Mongoid plugin to deal with localizable fields}
     gem.description = %Q{This gem aims to be a transparent way to deal with localizable fields.
       Basically use localized_field() instead of field() and that's it.
@@ -36,7 +36,7 @@ Rake::RDocTask.new do |rdoc|
   version = File.exist?('VERSION') ? File.read('VERSION') : ""
 
   rdoc.rdoc_dir = 'rdoc'
-  rdoc.title = "mongoid_i18n #{version}"
+  rdoc.title = "mongoid_localizable #{version}"
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
