@@ -38,6 +38,10 @@ describe Mongoid::I18n, "localized_field" do
         it "should use the current locale value" do
           Entry.where(:title => 'Title').first.should == @entry
         end
+
+        it "should work with string keys" do
+          Entry.where('title' => 'Title').first.should == @entry
+        end
       end
 
       describe "find(:first) with :conditions" do
