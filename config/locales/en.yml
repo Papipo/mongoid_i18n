@@ -1,0 +1,8 @@
+en:
+  locales:
+    en: "English"
+  activemodel:
+    errors:
+      messages:
+        locale_blank: "%{cur_locale} can't be blank"
+        all_locales_blank: "at least a translation should be inserted"
