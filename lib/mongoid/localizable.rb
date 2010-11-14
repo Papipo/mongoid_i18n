@@ -11,7 +11,7 @@ module Mongoid
 
     module ClassMethods
       def localized_field(name, options = {})
-        field name, options.merge(:type => LocalizedField)
+        field name, options.merge(:type => LocalizedField, :default => LocalizedField.new)
       end
 
       def validates_default_locale(names, options = {})
@@ -35,12 +35,9 @@ module Mongoid
       def create_accessors(name, meth, options = {})
         if options[:type] == LocalizedField
           if options[:use_default_if_empty]
-            define_method(meth) do
-              value = read_attribute(name)[I18n.locale.to_s] rescue ''
-              read_attribute(name)[I18n.default_locale.to_s] if value.blank? && I18n.locale != I18n.default_locale
-            end
+            define_method(meth) { read_attribute(name)[I18n.locale.to_s] || read_attribute(name)[I18n.default_locale.to_s] }
           else
-            define_method(meth) { read_attribute(name)[I18n.locale.to_s] rescue '' }
+            define_method(meth) { read_attribute(name)[I18n.locale.to_s] }
           end
           define_method("#{meth}=") do |value|
             if value.is_a?(Hash)
@@ -52,7 +49,7 @@ module Mongoid
             write_attribute(name, val)
           end
           define_method("#{meth}_translations") { 
-            read_attribute(name) || {}
+            read_attribute(name)
           }
           if options[:clear_empty_values]
             define_method("#{meth}_translations=") { |value| write_attribute(name, value.delete_if { |key, value| value.blank? }) }
