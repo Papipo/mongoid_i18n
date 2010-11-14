@@ -51,7 +51,9 @@ module Mongoid
             val.delete_if { |key, value| value.blank? } if options[:clear_empty_values]
             write_attribute(name, val)
           end
-          define_method("#{meth}_translations") { read_attribute(name) }
+          define_method("#{meth}_translations") { 
+            read_attribute(name) || {}
+          }
           if options[:clear_empty_values]
             define_method("#{meth}_translations=") { |value| write_attribute(name, value.delete_if { |key, value| value.blank? }) }
           else
