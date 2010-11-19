@@ -16,8 +16,8 @@ begin
     gem.email = "papipo@gmail.com"
     gem.homepage = "http://github.com/Papipo/mongoid_i18n"
     gem.authors = ["Rodrigo Álvarez"]
-    gem.add_dependency "mongoid", '>= 2.0.0.beta.9'
-    gem.add_development_dependency "rspec", ">= 2.0.0.beta.8"
+    gem.add_dependency "mongoid", '>= 2.0.0.beta.20'
+    gem.add_development_dependency "rspec", "2.1.0"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
   Jeweler::GemcutterTasks.new
