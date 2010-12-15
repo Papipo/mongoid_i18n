@@ -7,7 +7,9 @@ module Mongoid
 
     module ClassMethods
       def localized_field(name, options = {})
-        field name, options.merge(:type => LocalizedField)
+        options[:i18n_type] = options[:type] || "String"
+        options[:type] = LocalizedField
+        field name, options
       end
 
       def criteria
@@ -36,3 +38,4 @@ module Mongoid
     end
   end
 end
+
