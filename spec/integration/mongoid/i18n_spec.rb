@@ -6,7 +6,6 @@ class Entry
   include Mongoid::I18n
 
   localized_field :title
-  field :published, :type => Boolean
 end
 
 describe Mongoid::I18n, "localized_field" do
@@ -131,10 +130,6 @@ describe Mongoid::I18n, 'criteria on embeds_many association' do
     end
     @entry = Entry.new
     @sub_entries = (0..2).map { @entry.sub_entries.build }
-  end
-
-  it "should return a LocalizedCriteria" do
-    @entry.sub_entries.criteria.should be_a(Mongoid::I18n::LocalizedCriteria)
   end
 
   it "should contain the embedded documents" do

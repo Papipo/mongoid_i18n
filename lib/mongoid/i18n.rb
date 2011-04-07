@@ -1,5 +1,5 @@
 require 'mongoid/i18n/localized_field'
-require 'mongoid/i18n/localized_criteria'
+require 'mongoid/i18n/criterion/selector'
 
 module Mongoid
   module I18n
@@ -8,11 +8,6 @@ module Mongoid
     module ClassMethods
       def localized_field(name, options = {})
         field name, options.merge(:type => LocalizedField)
-      end
-
-      def criteria
-        scope = scope_stack.last rescue nil
-        scope || I18n::LocalizedCriteria.new(self)
       end
 
       protected
