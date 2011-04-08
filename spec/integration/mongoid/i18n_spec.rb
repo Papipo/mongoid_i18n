@@ -36,6 +36,12 @@ describe Mongoid::I18n, "localized_field" do
       before do
         @entry.save
       end
+      
+      describe "find by id" do
+        it "should find the document" do
+          Entry.find(@entry.id).should == @entry
+        end
+      end
 
       describe "where() criteria" do
         it "should use the current locale value" do
