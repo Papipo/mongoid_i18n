@@ -27,6 +27,10 @@ describe Mongoid::I18n, "localized_field" do
     before do
       @entry = Entry.new(:title => 'Title')
     end
+    
+    it "should return that value" do
+      @entry.title.should == 'Title'
+    end
 
     describe "and persisted" do
       before do
@@ -44,10 +48,6 @@ describe Mongoid::I18n, "localized_field" do
           Entry.find(:first, :conditions => {:title => 'Title'}).should == @entry
         end
       end
-    end
-
-    it "should return that value" do
-      @entry.title.should == 'Title'
     end
 
     describe "when the locale is changed" do
@@ -71,10 +71,10 @@ describe Mongoid::I18n, "localized_field" do
         describe "persisted and retrieved from db" do
           before do
             @entry.save
-            @entry = Entry.find(:first, :conditions => {:title => 'Título'})
+            @entry.reload
           end
 
-          it "the localized field value should be ok" do
+          it "the localized field value should be correct" do
             @entry.title.should == 'Título'
             I18n.locale = :en
             @entry.title.should == 'Title'
@@ -82,18 +82,18 @@ describe Mongoid::I18n, "localized_field" do
           end
         end
 
-        describe "getter.translations" do
+        describe "field_translations" do
           it "should return all translations" do
             @entry.title_translations.should == {'en' => 'Title', 'es' => 'Título'}
           end
         end
 
-        describe "getter.translations=" do
+        describe "with mass-assigned translations" do
           before do
             @entry.title_translations = {'en' => 'New title', 'es' => 'Nuevo título'}
           end
 
-          it "should accept new translations" do
+          it "should set all translations" do
             @entry.title_translations.should == {'en' => 'New title', 'es' => 'Nuevo título'}
           end
 
@@ -102,7 +102,7 @@ describe Mongoid::I18n, "localized_field" do
           end
         end
 
-        describe "and we go back to the original locale" do
+        describe "if we go back to the original locale" do
           before do
             I18n.locale = :en
           end
@@ -116,7 +116,7 @@ describe Mongoid::I18n, "localized_field" do
   end
 end
 
-describe Mongoid::I18n, 'criteria on embeds_many association' do
+describe Mongoid::I18n, 'localized field in embedded association' do
   before do
     class Entry
       embeds_many :sub_entries
@@ -137,7 +137,7 @@ describe Mongoid::I18n, 'criteria on embeds_many association' do
   end
 end
 
-describe Mongoid::I18n, 'criteria on embeds_one association' do
+describe Mongoid::I18n, 'localized field in embedded document' do
   before do
     class Entry
       embeds_one :sub_entry
@@ -150,13 +150,10 @@ describe Mongoid::I18n, 'criteria on embeds_one association' do
       embedded_in :entry, :inverse_of => :sub_entries
     end
     @entry = Entry.new
+    @entry.create_sub_entry(:subtitle => 'Oxford Street')
   end
   
   it "should store the title in the right locale" do
-    @entry.create_sub_entry(:subtitle => "Oxford Street")
-    
-    @entry.reload
-    
-    @entry.sub_entry.subtitle.should == 'Oxford Street'
+    @entry.reload.sub_entry.subtitle.should == 'Oxford Street'
   end
 end
