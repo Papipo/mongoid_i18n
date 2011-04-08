@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{mongoid_i18n}
-  s.version = "0.2.0"
+  s.version = "0.2.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Rodrigo \303\201lvarez"]
@@ -55,8 +55,8 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<mocha>, [">= 0"])
       s.add_runtime_dependency(%q<jeweler>, [">= 0"])
       s.add_runtime_dependency(%q<bundler>, [">= 0"])
-      s.add_runtime_dependency(%q<mongoid>, [">= 2.0.0.beta.20"])
-      s.add_development_dependency(%q<rspec>, ["= 2.1.0"])
+      s.add_runtime_dependency(%q<mongoid>, [">= 2.0.0"])
+      s.add_development_dependency(%q<rspec>, [">= 0"])
     else
       s.add_dependency(%q<bson_ext>, ["~> 1.2"])
       s.add_dependency(%q<mongoid>, [">= 2.0.0"])
@@ -64,8 +64,8 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<mocha>, [">= 0"])
       s.add_dependency(%q<jeweler>, [">= 0"])
       s.add_dependency(%q<bundler>, [">= 0"])
-      s.add_dependency(%q<mongoid>, [">= 2.0.0.beta.20"])
-      s.add_dependency(%q<rspec>, ["= 2.1.0"])
+      s.add_dependency(%q<mongoid>, [">= 2.0.0"])
+      s.add_dependency(%q<rspec>, [">= 0"])
     end
   else
     s.add_dependency(%q<bson_ext>, ["~> 1.2"])
@@ -74,8 +74,8 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<mocha>, [">= 0"])
     s.add_dependency(%q<jeweler>, [">= 0"])
     s.add_dependency(%q<bundler>, [">= 0"])
-    s.add_dependency(%q<mongoid>, [">= 2.0.0.beta.20"])
-    s.add_dependency(%q<rspec>, ["= 2.1.0"])
+    s.add_dependency(%q<mongoid>, [">= 2.0.0"])
+    s.add_dependency(%q<rspec>, [">= 0"])
   end
 end
 
