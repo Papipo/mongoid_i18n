@@ -10,6 +10,19 @@ class Entry
   localized_field :title_without_empty_values, :clear_empty_values => true
 end
 
+class EntryWithValidations
+  include Mongoid::Document
+  include Mongoid::I18n
+
+  localized_field :title_validated_with_default_locale
+  localized_field :title_validated_with_one_locale
+  localized_field :title_validated_with_all_locales
+
+  validates_default_locale  :title_validated_with_default_locale
+  validates_one_locale      :title_validated_with_one_locale
+  validates_all_locales     :title_validated_with_all_locales
+end
+
 describe Mongoid::I18n, "localized_field" do
   before do
     I18n.locale = :en
@@ -253,6 +266,101 @@ describe Mongoid::I18n, "localized_field with :clear_empty_values => true" do
       it "lose that translation" do
         @entry.title_without_empty_values_translations.should == {"en" => "Title en"}
       end
+    end
+  end
+end
+
+describe Mongoid::I18n, "localized_field with validation 'validates_default_locale'" do
+  before do
+    I18n.default_locale = :en
+    I18n.locale = :it
+    @entry = EntryWithValidations.new
+  end
+
+  describe "when run entry validations and default locale translation wasn't set" do
+    before do
+      @entry.title_validated_with_default_locale="Titolo"
+      @entry.valid?
+    end
+
+    it "is added a 'locale_blank' error for that field to entry errors list" do
+      @entry.errors.include?(:title_validated_with_default_locale).should be_true
+      @entry.errors[:title_validated_with_default_locale][0].split('.').last.should == 'locale_blank'
+    end
+  end
+
+  describe "when run entry validations and default locale translation was set" do
+    before do
+      @entry.title_validated_with_default_locale_translations={'en'=>'Title'}
+      @entry.valid?
+    end
+
+    it "no error for that field is added to entry errors list" do
+      @entry.errors.include?(:title_validated_with_default_locale).should be_false
+    end
+  end
+end
+
+describe Mongoid::I18n, "localized_field with validation 'validates_one_locale'" do
+  before do
+    I18n.default_locale = :en
+    I18n.locale = :it
+    @entry = EntryWithValidations.new
+  end
+
+  describe "when run entry validations and no translation was set" do
+    before do
+      @entry.valid?
+    end
+
+    it "is added a 'locale_blank' error for that field to entry errors list" do
+      @entry.errors.include?(:title_validated_with_one_locale).should be_true
+      @entry.errors[:title_validated_with_one_locale][0].split('.').last.should == 'all_locales_blank'
+    end
+  end
+
+  describe "when run entry validations and a locale translation was set" do
+    before do
+      @entry.title_validated_with_one_locale_translations={'it'=>'Titolo'}
+      @entry.valid?
+    end
+
+    it "no error for that field is added to entry errors list" do
+      @entry.errors.include?(:title_validated_with_one_locale).should be_false
+    end
+  end
+end
+
+describe Mongoid::I18n, "localized_field with validation 'validates_all_locales'" do
+  before do
+    I18n.default_locale = :en
+    I18n.available_locales = [:en, :it, :de, :fr]
+    I18n.locale = :it
+    @entry = EntryWithValidations.new
+  end
+
+  describe "when run entry validations and not all translations were set" do
+    before do
+      @entry.title_validated_with_all_locales_translations={'it'=>'Titolo', 'en'=>'Title'}
+      @entry.valid?
+    end
+
+    it "is added a 'locale_blank' error for that field for each missing locale" do
+      @entry.errors.include?(:title_validated_with_all_locales).should be_true
+      @entry.errors[:title_validated_with_all_locales].count.should == 2
+      @entry.errors[:title_validated_with_all_locales][0].split('.').last.should == 'locale_blank'
+      @entry.errors[:title_validated_with_all_locales][1].split('.').last.should == 'locale_blank'
+    end
+  end
+
+  describe "when run entry validations and all available locales translation were set" do
+    before do
+      @entry.title_validated_with_all_locales_translations={'it'=>'Titolo', 'en'=>'Title', 'fr'=>'Titre', 'de'=>'Titel'}
+      @entry.valid?
+    end
+
+    it "no error for that field is added to entry errors list" do
+      @entry.errors.include?(:title_validated_with_all_locales).should be_false
     end
   end
 end

@@ -40,6 +40,12 @@ With the last case:
 	@entry.title_translations = { 'en' => 'New title', 'es' => '' } # It will store only the 'en' value
 	@entry.title_translations[:es] # => New title
 
+There are validation helper to manage locale fields:
+-- credits to @nicolaracco (https://github.com/nicolaracco/mongoid_localizable)
+	validates_default_locale :title # The field has to contain at least the default translation
+	validates_one_locale     :title # The field has to contain at least one translation
+	validates_all_locales    :title # The field has to contain a translation for each available locale
+
 Criteria is handled for you:
 
   I18n.locale = :en
