@@ -13,17 +13,26 @@ module Mongoid
       protected
       def create_accessors(name, meth, options = {})
         if options[:type] == LocalizedField
-          define_method(meth) { read_attribute(name)[::I18n.locale.to_s] rescue '' }
+          if options[:use_default_if_empty]
+            define_method(meth) { read_attribute(name)[::I18n.locale.to_s] || read_attribute(name)[::I18n.default_locale.to_s] rescue ''}
+          else
+            define_method(meth) { read_attribute(name)[::I18n.locale.to_s] rescue '' }
+          end
           define_method("#{meth}=") do |value|
             value = if value.is_a?(Hash)
               (@attributes[name] || {}).merge(value)
             else
               (@attributes[name] || {}).merge(::I18n.locale.to_s => value)
             end
+            value.delete_if { |key, value| value.blank? } if options[:clear_empty_values]
             write_attribute(name, value)
           end
           define_method("#{meth}_translations") { read_attribute(name) }
-          define_method("#{meth}_translations=") { |value| write_attribute(name, value) }
+          if options[:clear_empty_values]
+            define_method("#{meth}_translations=") { |value| write_attribute(name, value.delete_if { |key, value| value.blank? }) }
+          else
+            define_method("#{meth}_translations=") { |value| write_attribute(name, value) }
+          end
         else
           super
         end
