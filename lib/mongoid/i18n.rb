@@ -40,7 +40,7 @@ module Mongoid
             else
               (@attributes[name] || {}).merge(::I18n.locale.to_s => value)
             end
-            value.delete_if { |key, value| value.blank? } if options[:clear_empty_values]
+            value = value.delete_if { |key, value| value.blank? } if options[:clear_empty_values]
             write_attribute(name, value)
           end
           define_method("#{meth}_translations") { read_attribute(name) }
