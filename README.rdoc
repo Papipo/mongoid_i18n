@@ -29,8 +29,8 @@ This will allow you to do stuff like this:
   @entry.title_translations # this returns a hash: {'en' => 'Title', 'es' => 'Title'}
   @entry.title_translations = {'en' => 'New title', 'es' => 'Nuevo título} # You can always mass-assign.
 
-The localized_field helper has two options (setted to false as default):
--- credits to @nicolaracco (https://github.com/nicolaracco/mongoid_localizable)
+The localized_field helper has two options (set to false as default):
+-- credits to @nicolaracco & @ogeidix
 	localized_field :title, :clear_empty_values => true   # This will remove all blank values when you do a mass assignment
 	localized_field :title, :use_default_if_empty => true # This will return the value assigned to the default locale, if there isn't a value for the current locale
 
@@ -41,7 +41,7 @@ With the last case:
 	@entry.title_translations[:es] # => New title
 
 There are validation helper to manage locale fields:
--- credits to @nicolaracco (https://github.com/nicolaracco/mongoid_localizable)
+-- credits to @nicolaracco & @ogeidix
 	validates_default_locale :title # The field has to contain at least the default translation
 	validates_one_locale     :title # The field has to contain at least one translation
 	validates_all_locales    :title # The field has to contain a translation for each available locale
