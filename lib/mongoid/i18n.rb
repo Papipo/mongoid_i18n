@@ -50,10 +50,16 @@ module Mongoid
               val = if options[:downwards_compatible]
                 (@attributes[name].is_a?(Hash) ? @attributes[name] : {::I18n.locale.to_s => @attributes[name]})
               else
-                 @attributes[name]
+                @attributes[name]
               end
               (val || {}).merge(::I18n.locale.to_s => value)
             end
+
+            # set field[default_locale] to existing (string)-value
+            if options[:downwards_compatible] && ! value[::I18n.default_locale.to_s].present? && @attributes[name].is_a?(String)
+              value[::I18n.default_locale.to_s] = @attributes[name]
+            end
+
             value = value.delete_if { |key, value| value.blank? } if options[:clear_empty_values]
             write_attribute(name, value)
           end
