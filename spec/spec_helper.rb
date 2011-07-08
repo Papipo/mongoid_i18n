@@ -6,7 +6,7 @@ require 'mongoid/i18n'
 require 'rspec'
 require 'rspec/autorun'
 
-Rspec.configure do |config|
+RSpec.configure do |config|
   config.mock_with :mocha
   config.after :each do
     Mongoid.master.collections.reject { |c| c.name =~ /^system\./ }.each(&:drop)

@@ -16,12 +16,6 @@ begin
     gem.email = "papipo@gmail.com"
     gem.homepage = "http://github.com/Papipo/mongoid_i18n"
     gem.authors = ["Rodrigo Álvarez"]
-    gem.add_dependency "mongoid", '>= 2.0.0'
-    gem.add_dependency "bson_ext", "~> 1.2"
-    gem.add_development_dependency "rspec"
-    gem.add_development_dependency "mocha"
-    gem.add_development_dependency "jeweler"
-    gem.add_development_dependency "bundler"
     
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
@@ -32,7 +26,7 @@ end
 
 
 desc "Run all examples"
-Rspec::Core::RakeTask.new(:spec)
+RSpec::Core::RakeTask.new(:spec)
 
 task :default => :spec
 
