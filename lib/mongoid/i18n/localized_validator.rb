@@ -9,6 +9,7 @@ module Mongoid
             record.errors.add(attribute, :not_available_locale, options.except(:mode).merge(
               :cur_locale => "#{locale}"
             ))
+          end
         elsif options[:mode] == :only_default
           if record.send("#{attribute}_translations")[::I18n.default_locale.to_s].blank?
             record.errors.add(attribute, :locale_blank, options.except(:mode).merge(

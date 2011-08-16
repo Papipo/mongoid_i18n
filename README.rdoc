@@ -7,6 +7,10 @@ Mongoid::I18n is a gem that makes localization almost transparent for the develo
 First, include it in your Gemfile. Remeber to add the :require parameter:
 
   gem 'mongoid_i18n', :require => 'mongoid/i18n'
+  
+Second, add available locales to your application.rb
+
+  config.i18n.available_locales = [:en, :es]
 
 Now you can add the module to the documents that need localization:
   

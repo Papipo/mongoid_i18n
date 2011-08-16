@@ -12,6 +12,7 @@ module Mongoid
     module ClassMethods
       def localized_field(name, options = {})
         field name, options.merge(:type => LocalizedField, :default => LocalizedField.new)
+        validates_with LocalizedValidator, options.merge(:mode => :check_availability, :attributes => name) if ::I18n.available_locales
       end
 
       def validates_default_locale(names, options = {})
