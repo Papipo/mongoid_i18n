@@ -12,6 +12,7 @@ module Mongoid
           lookups.push ::I18n.default_locale.to_s
         end
 
+        # Find first localized value in lookup path
         self[lookups.find{|locale| self[locale]}]
       end
 
