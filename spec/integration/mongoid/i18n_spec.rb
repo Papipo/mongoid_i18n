@@ -173,7 +173,7 @@ describe Mongoid::I18n, 'localized field in embedded document' do
     @entry = Entry.new
     @entry.create_sub_entry(:subtitle => 'Oxford Street')
   end
-  
+
   it "should store the title in the right locale" do
     @entry.reload.sub_entry.subtitle.should == 'Oxford Street'
   end
