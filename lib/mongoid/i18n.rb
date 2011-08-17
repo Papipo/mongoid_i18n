@@ -33,11 +33,6 @@ module Mongoid
 
         generated_field_methods.module_eval do
 
-          # Reader method
-          define_method(meth) do
-            read_attribute(name).to_s
-          end
-
           # Redefine writer method, since it's impossible to correctly implement
           # = method on field itself
           define_method("#{meth}=") do |value|
@@ -54,6 +49,7 @@ module Mongoid
             read_attribute(name).replace(values)
           end
         end
+
       end
     end
   end

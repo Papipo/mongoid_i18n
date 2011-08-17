@@ -3,6 +3,12 @@ module Mongoid
     class LocalizedField < ::Hash
       include Mongoid::Fields::Serializable
 
+      # Deserialize type
+      def deserialize(object)
+        replace(object)
+        to_s
+      end
+
       # Return translated string
       def to_s
         lookups = [::I18n.locale.to_s]
@@ -14,12 +20,6 @@ module Mongoid
 
         # Find first localized value in lookup path
         self[lookups.find{|locale| self[locale]}]
-      end
-
-      alias_method :eqal, :==
-      # Compare localized string against string, or if target is Hash, agains translations
-      def ==(target)
-        target.is_a?(Hash) ? eqal(target) : (to_s == target)
       end
 
       # Assign new translation
