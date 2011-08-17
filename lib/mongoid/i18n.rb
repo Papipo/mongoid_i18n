@@ -28,8 +28,11 @@ module Mongoid
 
       protected
       def create_accessors(name, meth, options = {})
-        # Let Mongoid do all stuff, then redefine methods
+        # Let Mongoid do all stuff
         super
+
+        # Skip if create_accessors called on non LocalizedField field
+        return if LocalizedField != options[:type]
 
         generated_field_methods.module_eval do
 
