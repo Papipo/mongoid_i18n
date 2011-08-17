@@ -370,12 +370,17 @@ end
 describe Mongoid::I18n, "create_accessors" do
   before do
     I18n.locale = :en
-    @entry = Entry.new(:weight => 70)
+    @entry = Entry.new
   end
 
-  it "should not affect other fields " do
+  it "should not affect other fields accessors" do
+    @entry.weight.should == 60
+
     @entry.weight = 70
     @entry.weight.should == 70
+  end
+
+  it "should not define own methods on for fields" do
     @entry.should_not respond_to :weight_translations
   end
 end
