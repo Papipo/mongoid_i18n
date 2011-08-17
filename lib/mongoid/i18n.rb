@@ -28,7 +28,7 @@ module Mongoid
 
       protected
       def create_accessors(name, meth, options = {})
-        # Let Mongoid do all stuff, then redifine methods
+        # Let Mongoid do all stuff, then redefine methods
         super
 
         generated_field_methods.module_eval do
@@ -46,7 +46,7 @@ module Mongoid
 
           # Return list of attribute translations
           define_method("#{meth}_translations") do
-            read_attribute(name).translations
+            read_attribute(name).to_hash
           end
 
           # Mass-assign translations
