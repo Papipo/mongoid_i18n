@@ -12,6 +12,7 @@ module Mongoid
     module ClassMethods
       def localized_field(name, options = {})
         field name, options.merge(:type => LocalizedField, :default => LocalizedField.new)
+        validates_with LocalizedValidator, options.merge(:mode => :check_availability, :attributes => name) if ::I18n.available_locales
       end
 
       def validates_default_locale(names, options = {})
@@ -30,7 +31,15 @@ module Mongoid
       def create_accessors(name, meth, options = {})
         if options[:type] == LocalizedField
           if options[:use_default_if_empty]
-            define_method(meth) { read_attribute(name)[::I18n.locale.to_s] || read_attribute(name)[::I18n.default_locale.to_s] rescue ''}
+            define_method(meth) {
+              att = read_attribute(name)[::I18n.locale.to_s] || read_attribute(name)[::I18n.default_locale.to_s]
+
+              if ! read_attribute(name).is_a?(Hash)
+                att = (options[:downwards_compatible] ? read_attribute(name) : '')
+              end
+
+              att rescue ''
+            }
           else
             define_method(meth) { read_attribute(name)[::I18n.locale.to_s] rescue '' }
           end
@@ -38,8 +47,19 @@ module Mongoid
             value = if value.is_a?(Hash)
               (@attributes[name] || {}).merge(value)
             else
-              (@attributes[name] || {}).merge(::I18n.locale.to_s => value)
+              val = if options[:downwards_compatible]
+                (@attributes[name].is_a?(Hash) ? @attributes[name] : {::I18n.locale.to_s => @attributes[name]})
+              else
+                @attributes[name]
+              end
+              (val || {}).merge(::I18n.locale.to_s => value)
             end
+
+            # set field[default_locale] to existing (string)-value
+            if options[:downwards_compatible] && ! value[::I18n.default_locale.to_s].present? && @attributes[name].is_a?(String)
+              value[::I18n.default_locale.to_s] = @attributes[name]
+            end
+
             value = value.delete_if { |key, value| value.blank? } if options[:clear_empty_values]
             write_attribute(name, value)
           end

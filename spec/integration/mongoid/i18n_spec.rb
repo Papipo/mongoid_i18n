@@ -74,6 +74,7 @@ describe Mongoid::I18n, "localized_field" do
     describe "when the locale is changed" do
       before do
         I18n.locale = :es
+        I18n.available_locales = [:en, :es]
       end
 
       it "should return a blank value" do
@@ -274,6 +275,7 @@ describe Mongoid::I18n, "localized_field with validation 'validates_default_loca
   before do
     I18n.default_locale = :en
     I18n.locale = :it
+    I18n.available_locales = [:en, :it]
     @entry = EntryWithValidations.new
   end
 
@@ -305,6 +307,7 @@ describe Mongoid::I18n, "localized_field with validation 'validates_one_locale'"
   before do
     I18n.default_locale = :en
     I18n.locale = :it
+    
     @entry = EntryWithValidations.new
   end
 
@@ -363,4 +366,17 @@ describe Mongoid::I18n, "localized_field with validation 'validates_all_locales'
       @entry.errors.include?(:title_validated_with_all_locales).should be_false
     end
   end
+  
+  describe "when run entry without availiable locale"
+    before do
+      @entry.title_validated_with_all_locales_translations={'tt'=>'Titolo', 'fk'=>'Titre', 'it'=>'Titolo', 'en'=>'Title', 'fr'=>'Titre', 'de'=>'Titel'}
+      @entry.valid?
+    end
+    
+    it "is added a 'not_available_locale' error for that field for each not available locale" do
+      @entry.errors.include?(:title_validated_with_all_locales).should be_true
+      @entry.errors[:title_validated_with_all_locales].count.should == 2
+      @entry.errors[:title_validated_with_all_locales][0].split('.').last.should == 'not_available_locale'
+      @entry.errors[:title_validated_with_all_locales][1].split('.').last.should == 'not_available_locale'
+    end
 end

@@ -2,7 +2,15 @@ module Mongoid
   module I18n
     class LocalizedValidator < ActiveModel::EachValidator
       def validate_each record, attribute, value
-        if options[:mode] == :only_default
+        # checking for local availability
+        if options[:mode] == :check_availability
+          diffloc = record.send("#{attribute}_translations").keys.collect { |key| key.to_sym } - ::I18n.available_locales
+          diffloc.each do |locale| 
+            record.errors.add(attribute, :not_available_locale, options.except(:mode).merge(
+              :cur_locale => "#{locale}"
+            ))
+          end
+        elsif options[:mode] == :only_default
           if record.send("#{attribute}_translations")[::I18n.default_locale.to_s].blank?
             record.errors.add(attribute, :locale_blank, options.except(:mode).merge(
               :cur_locale => ::I18n.t(:"locales.#{::I18n.default_locale}", :default => ::I18n.default_locale.to_s)
