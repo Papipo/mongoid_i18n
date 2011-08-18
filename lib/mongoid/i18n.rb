@@ -11,7 +11,7 @@ module Mongoid
 
     module ClassMethods
       def localized_field(name, options = {})
-        field name, options.merge(:type => LocalizedField, :default => LocalizedField.new(name, options))
+        field name, options.merge(:type => LocalizedField, :default => {})
       end
 
       def validates_default_locale(names, options = {})
@@ -34,22 +34,27 @@ module Mongoid
         # Skip if create_accessors called on non LocalizedField field
         return if LocalizedField != options[:type]
 
+        # Get field to retain incapsulation of LocalizedField class
+        field = fields[name]
+
         generated_field_methods.module_eval do
 
           # Redefine writer method, since it's impossible to correctly implement
           # = method on field itself
           define_method("#{meth}=") do |value|
-            read_attribute(name) << value
+            hash = field.assign(read_attribute(name), value)
+            write_attribute(name, hash)
           end
 
           # Return list of attribute translations
           define_method("#{meth}_translations") do
-            read_attribute(name).to_hash
+            field.to_hash(read_attribute(name))
           end
 
           # Mass-assign translations
           define_method("#{meth}_translations=") do |values|
-            read_attribute(name).replace(values)
+            hash = field.replace(read_attribute(name), values)
+            write_attribute(name, hash)
           end
         end
 
