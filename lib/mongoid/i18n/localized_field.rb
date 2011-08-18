@@ -5,8 +5,7 @@ module Mongoid
 
       # Deserialize type
       def deserialize(object)
-        replace(object)
-        to_s
+        self.replace(object).to_s
       end
 
       # Return translated string
@@ -18,20 +17,17 @@ module Mongoid
           lookups.push ::I18n.default_locale.to_s
         end
 
+        # HACK: Due unknown reason it's impossible to use [].
+        #       In some cases it fails with weird error: "Wrong number of agruments 1 to 0"
+        #       I have no idea why.
+
         # Find first localized value in lookup path
-        self[lookups.find{|locale| self[locale]}]
+        self.fetch(lookups.find{|locale| self.fetch(locale, nil)}, nil)
       end
 
       # Assign new translation
       def <<(new_value)
         self[::I18n.locale.to_s] = new_value
-      end
-
-      # HACK: Due unknown reason it's impossible to use [].
-      #       In some cases it fails with weird error: "Wrong number of agruments 1 to 0"
-      #       I have no idea why.
-      def [](value = nil)
-        self.fetch(value, nil)
       end
 
       # Return translations as keys, with
