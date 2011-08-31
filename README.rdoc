@@ -20,10 +20,10 @@ Now you can add the module to the documents that need localization:
   
 This will allow you to do stuff like this:
 
-  I18n.locale = :en
+  I18n.locale = :en # or Mongoid::I18n.locale = :en
   @entry = Entry.new(:title => 'Title') # will be stored in the 'en' translation
   
-  I18n.locale :es
+  I18n.locale = :es # or Mongoid::I18n.locale = :es
   @entry.title = 'Título' # will be stored in the 'es' translation
   
   @entry.title_translations # this returns a hash: {'en' => 'Title', 'es' => 'Title'}
@@ -51,7 +51,34 @@ Criteria is handled for you:
   I18n.locale = :en
   Entry.where(:title => 'Title') # This will search automatically for the 'en' translation
   Entry.find(:first, :title.in => ['Stuff', 'More stuff']) # find() and complex criteria also works
+
+If using the default I18n.locale is not flexible enough for you, you may set a custom locale in any controller that inherits from ApplicationController, or ApplicationController itself. This will set the internal Mongoid::I18n.locale to be different than the actual I18n.locale.
+
+  class ApplicationController < ActionController::Base
+    # You must use mongoid_i18n_locale, as this is called in a before_filter
+    def mongoid_i18n_locale
+      current_user.locale || params[:locale]
+    end
+  end
+
+If you'd like to set both values explicitly, you may continue just setting the I18n.locale like most Rails guides already suggest:
+
+  class ApplicationController < ActionController::Base
+    before_filter :set_user_locale
+    
+    def set_user_locale
+      I18n.locale = params[:locale]
+    end
+  end
+
+On startup, Mongoid::I18n uses the default I18n.locale from your project as a starter. But if you set a new locale anywhere within your application, Mongoid::I18n will use the same locale. So imagine, our default locale is "en":
+
+  I18n.locale == :en # => true
+  Mongoid::I18n.locale == :en # => true
   
+  # Now with setting a new locale, Mongoid::I18n will return the same
+  I18n.locale = :es # => true
+  Mongoid::I18n.locale == :es # => true
 
 == Note on Patches/Pull Requests
  

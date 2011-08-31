@@ -1,5 +1,7 @@
 require 'mongoid/i18n/localized_field'
 require 'mongoid/i18n/criterion/selector'
+require 'mongoid/i18n/controller'
+require 'mongoid/i18n/extension'
 require 'mongoid/i18n/localized_validator'
 
 # add english load path by default
@@ -8,6 +10,20 @@ I18n.load_path << File.join(File.dirname(__FILE__), "..", "..", "config", "local
 module Mongoid
   module I18n
     extend ActiveSupport::Concern
+    
+    mattr_accessor :locale
+    @@locale = ::I18n.locale
+    
+    def self.locale
+      @@locale.to_s
+    end
+    
+    mattr_accessor :default_locale
+    @@default_locale = ::I18n.default_locale
+    
+    def self.default_locale
+      @@default_locale.to_s
+    end
 
     module ClassMethods
       def localized_field(name, options = {})
@@ -30,20 +46,23 @@ module Mongoid
       def create_accessors(name, meth, options = {})
         if options[:type] == LocalizedField
           if options[:use_default_if_empty]
-            define_method(meth) { read_attribute(name)[::I18n.locale.to_s] || read_attribute(name)[::I18n.default_locale.to_s] rescue ''}
+            define_method(meth) { read_attribute(name)[Mongoid::I18n.locale] || read_attribute(name)[Mongoid::I18n.default_locale] rescue '' }
           else
-            define_method(meth) { read_attribute(name)[::I18n.locale.to_s] rescue '' }
+            define_method(meth) { read_attribute(name)[Mongoid::I18n.locale] rescue '' }
           end
+          
           define_method("#{meth}=") do |value|
             value = if value.is_a?(Hash)
               (@attributes[name] || {}).merge(value)
             else
-              (@attributes[name] || {}).merge(::I18n.locale.to_s => value)
+              (@attributes[name] || {}).merge(Mongoid::I18n.locale => value)
             end
             value = value.delete_if { |key, value| value.blank? } if options[:clear_empty_values]
             write_attribute(name, value)
           end
+          
           define_method("#{meth}_translations") { read_attribute(name) }
+          
           if options[:clear_empty_values]
             define_method("#{meth}_translations=") { |value| write_attribute(name, value.delete_if { |key, value| value.blank? }) }
           else
@@ -55,4 +74,9 @@ module Mongoid
       end
     end
   end
+end
+
+# Include the controller helpers for localization
+ActiveSupport.on_load(:action_controller) do
+  include Mongoid::I18n::Controller
 end

@@ -3,9 +3,9 @@ module Mongoid
     class LocalizedValidator < ActiveModel::EachValidator
       def validate_each record, attribute, value
         if options[:mode] == :only_default
-          if record.send("#{attribute}_translations")[::I18n.default_locale.to_s].blank?
+          if record.send("#{attribute}_translations")[Mongoid::I18n.default_locale].blank?
             record.errors.add(attribute, :locale_blank, options.except(:mode).merge(
-              :cur_locale => ::I18n.t(:"locales.#{::I18n.default_locale}", :default => ::I18n.default_locale.to_s)
+              :cur_locale => ::I18n.t(:"locales.#{Mongoid::I18n.default_locale}", :default => Mongoid::I18n.default_locale)
             ))
           end
         elsif options[:mode] == :one_locale
@@ -18,7 +18,7 @@ module Mongoid
           diffloc.each do |locale| 
             record.errors.add(attribute, :locale_blank, options.except(:mode).merge(
               :cur_locale => ::I18n.t(:"locales.#{locale}", :default => locale.to_s)
-            )) 
+            ))
           end
         end
       end	

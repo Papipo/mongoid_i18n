@@ -25,7 +25,7 @@ end
 
 describe Mongoid::I18n, "localized_field" do
   before do
-    I18n.locale = :en
+    Mongoid::I18n.locale = :en
   end
 
   describe "without an assigned value" do
@@ -73,7 +73,7 @@ describe Mongoid::I18n, "localized_field" do
 
     describe "when the locale is changed" do
       before do
-        I18n.locale = :es
+        Mongoid::I18n.locale = :es
       end
 
       it "should return a blank value" do
@@ -97,7 +97,7 @@ describe Mongoid::I18n, "localized_field" do
 
           it "the localized field value should be correct" do
             @entry.title.should == 'Título'
-            I18n.locale = :en
+            Mongoid::I18n.locale = :en
             @entry.title.should == 'Title'
             @entry.title_translations.should == {'en' => 'Title', 'es' => 'Título'}
           end
@@ -125,7 +125,7 @@ describe Mongoid::I18n, "localized_field" do
 
         describe "if we go back to the original locale" do
           before do
-            I18n.locale = :en
+            Mongoid::I18n.locale = :en
           end
 
           it "should return the original value" do
@@ -181,8 +181,8 @@ end
 
 describe Mongoid::I18n, "localized_field with :use_default_if_empty => true" do
   before do
-    I18n.default_locale = :en
-    I18n.locale = :en
+    Mongoid::I18n.default_locale = :en
+    Mongoid::I18n.locale = :en
   end
 
   describe "without an assigned value" do
@@ -206,7 +206,7 @@ describe Mongoid::I18n, "localized_field with :use_default_if_empty => true" do
 
     describe "when the locale is changed" do
       before do
-        I18n.locale = :it
+        Mongoid::I18n.locale = :it
       end
 
       it "should return the value of the default locale" do
@@ -224,7 +224,7 @@ describe Mongoid::I18n, "localized_field with :use_default_if_empty => true" do
 
         describe "if we go back to the original locale" do
           before do
-            I18n.locale = :en
+            Mongoid::I18n.locale = :en
           end
 
           it "should return the original value" do
@@ -239,7 +239,7 @@ end
 describe Mongoid::I18n, "localized_field with :clear_empty_values => true" do
   describe "when are assigned two translations" do
     before do
-      I18n.locale = :en
+      Mongoid::I18n.locale = :en
       @entry = Entry.new
       @entry.title_without_empty_values_translations = {"en" => "Title en", "it" => "Title it"}
     end
@@ -272,8 +272,8 @@ end
 
 describe Mongoid::I18n, "localized_field with validation 'validates_default_locale'" do
   before do
-    I18n.default_locale = :en
-    I18n.locale = :it
+    Mongoid::I18n.default_locale = :en
+    Mongoid::I18n.locale = :it
     @entry = EntryWithValidations.new
   end
 
@@ -303,8 +303,8 @@ end
 
 describe Mongoid::I18n, "localized_field with validation 'validates_one_locale'" do
   before do
-    I18n.default_locale = :en
-    I18n.locale = :it
+    Mongoid::I18n.default_locale = :en
+    Mongoid::I18n.locale = :it
     @entry = EntryWithValidations.new
   end
 
@@ -333,9 +333,9 @@ end
 
 describe Mongoid::I18n, "localized_field with validation 'validates_all_locales'" do
   before do
-    I18n.default_locale = :en
+    Mongoid::I18n.default_locale = :en
     I18n.available_locales = [:en, :it, :de, :fr]
-    I18n.locale = :it
+    Mongoid::I18n.locale = :it
     @entry = EntryWithValidations.new
   end
 
@@ -361,6 +361,28 @@ describe Mongoid::I18n, "localized_field with validation 'validates_all_locales'
 
     it "no error for that field is added to entry errors list" do
       @entry.errors.include?(:title_validated_with_all_locales).should be_false
+    end
+  end
+end
+
+describe ::I18n, "extension" do
+  before do
+    ::I18n.locale = :en
+  end
+  
+  describe "with default value" do
+    it "should return same as translation locale" do
+      Mongoid::I18n.locale.should == ::I18n.locale.to_s
+    end
+  end
+  
+  describe "with custom locale set on default i18n" do
+    before do
+      ::I18n.locale = :it
+    end
+    
+    it "should return same as translation locale" do
+      Mongoid::I18n.locale.should == ::I18n.locale.to_s
     end
   end
 end
