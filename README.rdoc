@@ -52,6 +52,8 @@ Criteria is handled for you:
   Entry.where(:title => 'Title') # This will search automatically for the 'en' translation
   Entry.find(:first, :title.in => ['Stuff', 'More stuff']) # find() and complex criteria also works
 
+== Setting the locale from the controller
+
 If using the default I18n.locale is not flexible enough for you, you may set a custom locale in any controller that inherits from ApplicationController, or ApplicationController itself. This will set the internal Mongoid::I18n.locale to be different than the actual I18n.locale.
 
   class ApplicationController < ActionController::Base
