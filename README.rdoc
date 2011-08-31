@@ -57,19 +57,22 @@ Criteria is handled for you:
 If using the default I18n.locale is not flexible enough for you, you may set a custom locale in any controller that inherits from ApplicationController, or ApplicationController itself. This will set the internal Mongoid::I18n.locale to be different than the actual I18n.locale.
 
   class ApplicationController < ActionController::Base
-    # You must use mongoid_i18n_locale, as this is called in a before_filter
+    # You must use mongoid_i18n_locale, as this is called by a internal before_filter set by Mongoid::I18n
     def mongoid_i18n_locale
       current_user.locale || params[:locale]
     end
   end
 
-If you'd like to set both values explicitly, you may continue just setting the I18n.locale like most Rails guides already suggest:
+If you'd like to set both values explicitly, you may continue just setting the I18n.locale like most Rails guides already suggest and Mongoid::I18n will use that same locale.
 
   class ApplicationController < ActionController::Base
     before_filter :set_user_locale
     
     def set_user_locale
       I18n.locale = params[:locale]
+      
+      Rails.logger.info I18n.locale # => :es
+      Rails.logger.info Mongoid::I18n.locale # => :es
     end
   end
 
