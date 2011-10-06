@@ -11,7 +11,7 @@ module Mongoid
 
     module ClassMethods
       def localized_field(name, options = {})
-        field name, options.merge(:type => LocalizedField, :default => LocalizedField.new)
+        field name, options.merge(:type => LocalizedField, :default => {})
       end
 
       def validates_default_locale(names, options = {})
@@ -28,30 +28,36 @@ module Mongoid
 
       protected
       def create_accessors(name, meth, options = {})
-        if options[:type] == LocalizedField
-          if options[:use_default_if_empty]
-            define_method(meth) { read_attribute(name)[::I18n.locale.to_s] || read_attribute(name)[::I18n.default_locale.to_s] rescue ''}
-          else
-            define_method(meth) { read_attribute(name)[::I18n.locale.to_s] rescue '' }
-          end
+        # Let Mongoid do all stuff
+        super
+
+        # Skip if create_accessors called on non LocalizedField field
+        return if LocalizedField != options[:type]
+
+        # Get field to retain incapsulation of LocalizedField class
+        field = fields[name]
+
+        generated_field_methods.module_eval do
+
+          # Redefine writer method, since it's impossible to correctly implement
+          # = method on field itself
           define_method("#{meth}=") do |value|
-            value = if value.is_a?(Hash)
-              (@attributes[name] || {}).merge(value)
-            else
-              (@attributes[name] || {}).merge(::I18n.locale.to_s => value)
-            end
-            value = value.delete_if { |key, value| value.blank? } if options[:clear_empty_values]
-            write_attribute(name, value)
+            hash = field.assign(read_attribute(name), value)
+            write_attribute(name, hash)
           end
-          define_method("#{meth}_translations") { read_attribute(name) }
-          if options[:clear_empty_values]
-            define_method("#{meth}_translations=") { |value| write_attribute(name, value.delete_if { |key, value| value.blank? }) }
-          else
-            define_method("#{meth}_translations=") { |value| write_attribute(name, value) }
+
+          # Return list of attribute translations
+          define_method("#{meth}_translations") do
+            field.to_hash(read_attribute(name))
           end
-        else
-          super
+
+          # Mass-assign translations
+          define_method("#{meth}_translations=") do |values|
+            hash = field.replace(read_attribute(name), values)
+            write_attribute(name, hash)
+          end
         end
+
       end
     end
   end
