@@ -5,6 +5,8 @@ class Entry
   include Mongoid::Document
   include Mongoid::I18n
 
+  field :weight, :type => Integer, :default => 60
+
   localized_field :title
   localized_field :title_with_default, :use_default_if_empty => true
   localized_field :title_without_empty_values, :clear_empty_values => true
@@ -173,7 +175,7 @@ describe Mongoid::I18n, 'localized field in embedded document' do
     @entry = Entry.new
     @entry.create_sub_entry(:subtitle => 'Oxford Street')
   end
-  
+
   it "should store the title in the right locale" do
     @entry.reload.sub_entry.subtitle.should == 'Oxford Street'
   end
@@ -362,5 +364,23 @@ describe Mongoid::I18n, "localized_field with validation 'validates_all_locales'
     it "no error for that field is added to entry errors list" do
       @entry.errors.include?(:title_validated_with_all_locales).should be_false
     end
+  end
+end
+
+describe Mongoid::I18n, "create_accessors" do
+  before do
+    I18n.locale = :en
+    @entry = Entry.new
+  end
+
+  it "should not affect other fields accessors" do
+    @entry.weight.should == 60
+
+    @entry.weight = 70
+    @entry.weight.should == 70
+  end
+
+  it "should not define own methods on for fields" do
+    @entry.should_not respond_to :weight_translations
   end
 end
