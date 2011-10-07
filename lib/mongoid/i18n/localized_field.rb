@@ -31,7 +31,7 @@ module Mongoid
 
       # Assing new translation to translation table.
       def assign(object, value)
-        object.merge(locale => value)
+        (object || {}).merge(locale => value)
       end
 
       # Replace translation hash with new one. If :clear_empty_values is set to
