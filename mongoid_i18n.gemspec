@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = [%q{Rodrigo Álvarez}]
-  s.date = %q{2011-10-08}
+  s.date = %q{2011-10-17}
   s.description = %q{This gem aims to be a transparent way to deal with localizable fields.
       Basically use localized_field() instead of field() and that's it.
       It will take care of locales for you when using find or criteria.
@@ -48,7 +48,7 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<mongoid>, [">= 2.1.0"])
-      s.add_runtime_dependency(%q<bson_ext>, [">= 0"])
+      s.add_development_dependency(%q<bson_ext>, [">= 0"])
       s.add_development_dependency(%q<rspec>, [">= 0"])
       s.add_development_dependency(%q<mocha>, [">= 0"])
       s.add_development_dependency(%q<jeweler>, [">= 0"])
