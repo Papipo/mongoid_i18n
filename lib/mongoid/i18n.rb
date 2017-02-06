@@ -37,7 +37,7 @@ module Mongoid
         # Get field to retain incapsulation of LocalizedField class
         field = fields[name]
 
-        generated_field_methods.module_eval do
+        module_eval do
 
           # Redefine writer method, since it's impossible to correctly implement
           # = method on field itself
